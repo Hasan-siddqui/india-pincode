@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Find pin codes by selecting states, districts, and villages in India. Explore detailed postal information for accurate location search.">
+    <meta name="keywords" content="India pin code, state pin code, district pin code, village pin code, postal code India">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="India State, District, Village, and Pin Code Lookup">
+    <meta property="og:description" content="Quickly find pin codes by selecting a state, district, and village in India.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/india-pincode">
+    <meta property="og:image" content="https://yourdomain.com/images/pincode-search.png">
+    <meta property="og:locale" content="en_IN">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="India Pin Code Lookup by State, District, and Village">
+    <meta name="twitter:description" content="Find the right pin code for any location in India using our state, district, and village selector.">
+    <meta name="twitter:image" content="https://yourdomain.com/images/pincode-search.png">
+    <title>India State, District, Village, and Pin Code Lookup</title>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 100%;
+            margin: 160px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: aliceblue;
+        }
+        label {
+            margin-right: 10px;
+        }
+        select {
+            margin: 10px 0;
+            padding: 8px;
+            width: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": "India State, District, Village, and Pin Code Lookup",
+            "description": "Find pin codes by selecting states, districts, and villages in India.",
+            "url": "https://yourdomain.com/india-pincode",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://yourdomain.com/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Find Pin Code</h1>
+
+        <!-- Step 1: State Selection -->
+        <label for="state">State:</label>
+        <select id="state">
+            <option value="">Select a state</option>
+        </select>
+
+        <br>
+
+        <!-- Step 2: District Selection -->
+        <label for="district">District:</label>
+        <select id="district" disabled>
+            <option value="">Select a district</option>
+        </select>
+
+        <br>
+
+        <!-- Step 3: Village Selection -->
+        <label for="village">Village:</label>
+        <select id="village" disabled>
+            <option value="">Select a village</option>
+        </select>
+
+        <br>
+
+        <!-- Step 4: Pin Code Display -->
+        <label for="pincode">Pin Code:</label>
+        <select id="pincode" disabled>
+            <option value="">Select a pin code</option>
+        </select>
+    </div>
+
+    <script src="data.script"></script>
+    <script>
+        // Select DOM elements
+        const stateSelect = document.getElementById("state");
+        const districtSelect = document.getElementById("district");
+        const villageSelect = document.getElementById("village");
+        const pincodeSelect = document.getElementById("pincode");
+
+        // Populate states dropdown
+        function populateStates() {
+            for (const state in indiaData) {
+                const option = document.createElement("option");
+                option.value = state;
+                option.text = state;
+                stateSelect.add(option);
+            }
+        }
+
+        // Populate districts based on the selected state
+        stateSelect.addEventListener("change", function () {
+            districtSelect.innerHTML = '<option value="">Select a district</option>';
+            villageSelect.innerHTML = '<option value="">Select a village</option>';
+            pincodeSelect.innerHTML = '<option value="">Select a pin code</option>';
+            districtSelect.disabled = true;
+            villageSelect.disabled = true;
+            pincodeSelect.disabled = true;
+
+            const selectedState = stateSelect.value;
+            if (selectedState) {
+                districtSelect.disabled = false;
+                for (const district in indiaData[selectedState]) {
+                    const option = document.createElement("option");
+                    option.value = district;
+                    option.text = district;
+                    districtSelect.add(option);
+                }
+            }
+        });
+
+        // Populate villages based on the selected district
+        districtSelect.addEventListener("change", function () {
+            villageSelect.innerHTML = '<option value="">Select a village</option>';
+            pincodeSelect.innerHTML = '<option value="">Select a pin code</option>';
+            villageSelect.disabled = true;
+            pincodeSelect.disabled = true;
+
+            const selectedState = stateSelect.value;
+            const selectedDistrict = districtSelect.value;
+            if (selectedDistrict) {
+                villageSelect.disabled = false;
+                for (const village in indiaData[selectedState][selectedDistrict]) {
+                    const option = document.createElement("option");
+                    option.value = village;
+                    option.text = village;
+                    villageSelect.add(option);
+                }
+            }
+        });
+
+        // Populate pin codes based on the selected village
+        villageSelect.addEventListener("change", function () {
+            pincodeSelect.innerHTML = '<option value="">Select a pin code</option>';
+            pincodeSelect.disabled = true;
+
+            const selectedState = stateSelect.value;
+            const selectedDistrict = districtSelect.value;
+            const selectedVillage = villageSelect.value;
+            if (selectedVillage) {
+                pincodeSelect.disabled = false;
+                const pinCode = indiaData[selectedState][selectedDistrict][selectedVillage];
+                if (pinCode) {
+                    const option = document.createElement("option");
+                    option.value = pinCode;
+                    option.text = pinCode;
+                    pincodeSelect.add(option);
+                }
+            }
+        });
+
+        // Initialize the form with state options
+        populateStates();
+    </script>
+</body>
+</html>
